@@ -49,6 +49,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.samples.apps.sunflower.R
 import com.google.samples.apps.sunflower.compose.garden.GardenScreen
@@ -110,7 +111,7 @@ fun HomePagerScreen(
 
         // Tab Row
         TabRow(
-            selectedTabIndex = pagerState.currentPage
+            selectedTabIndex = pagerState.currentPage,
         ) {
             pages.forEachIndexed { index, page ->
                 val title = stringResource(id = page.titleResId)
@@ -124,7 +125,11 @@ fun HomePagerScreen(
                             contentDescription = title
                         )
                     },
-                    unselectedContentColor = MaterialTheme.colorScheme.secondary
+                    selectedContentColor = if (pagerState.currentPage == index) {
+                        MaterialTheme.colorScheme.secondaryContainer
+                    } else {
+                        MaterialTheme.colorScheme.secondary
+                    }
                 )
             }
         }
@@ -173,11 +178,12 @@ private fun HomeTopAppBar(
         title = {
             Row(
                 Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.Start,
             ) {
                 Text(
                     text = stringResource(id = R.string.app_name),
-                    style = MaterialTheme.typography.displaySmall
+                    style = MaterialTheme.typography.displaySmall,
+
                 )
             }
         },

@@ -33,6 +33,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import com.google.samples.apps.sunflower.R
 import com.google.samples.apps.sunflower.compose.utils.SunflowerImage
 import com.google.samples.apps.sunflower.data.Plant
@@ -69,13 +70,13 @@ fun ImageListItem(name: String, imageUrl: String, onClick: () -> Unit) {
             )
             Text(
                 text = name,
-                textAlign = TextAlign.Center,
+                textAlign = TextAlign.Left,
                 maxLines = 1,
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = dimensionResource(id = R.dimen.margin_normal))
-                    .wrapContentWidth(Alignment.CenterHorizontally)
+                    .padding(start = 20.dp)
             )
         }
     }

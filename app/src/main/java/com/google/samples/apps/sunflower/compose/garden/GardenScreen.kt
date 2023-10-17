@@ -24,10 +24,13 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
@@ -41,11 +44,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.tooling.preview.PreviewParameterProvider
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.samples.apps.sunflower.R
 import com.google.samples.apps.sunflower.compose.utils.SunflowerImage
@@ -96,14 +99,9 @@ private fun GardenList(
     // Call reportFullyDrawn when the garden list has been rendered
     val gridState = rememberLazyGridState()
     ReportDrawnWhen { gridState.layoutInfo.totalItemsCount > 0 }
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        modifier,
-        state = gridState,
-        contentPadding = PaddingValues(
-            horizontal = dimensionResource(id = R.dimen.card_side_margin),
-            vertical = dimensionResource(id = R.dimen.margin_normal)
-        )
+    LazyRow(
+        contentPadding = PaddingValues(8.dp),
+        modifier = Modifier
     ) {
         items(
             items = gardenPlants,
@@ -128,16 +126,22 @@ private fun GardenListItem(
     val cardSideMargin = dimensionResource(id = R.dimen.card_side_margin)
     val marginNormal = dimensionResource(id = R.dimen.margin_normal)
 
+
     ElevatedCard(
+        shape = MaterialTheme.shapes.medium,
         onClick = { onPlantClick(plant) },
         modifier = Modifier.padding(
             start = cardSideMargin,
             end = cardSideMargin,
-            bottom = dimensionResource(id = R.dimen.card_bottom_margin)
-        ),
+            bottom = dimensionResource(id = R.dimen.card_bottom_margin),
+        )
+            .width(200.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
     ) {
-        Column(Modifier.fillMaxWidth()) {
+        Column(
+            Modifier.fillMaxWidth()
+                .padding(bottom = 10.dp)
+        ) {
             SunflowerImage(
                 model = vm.imageUrl,
                 contentDescription = plant.plant.description,
@@ -145,6 +149,7 @@ private fun GardenListItem(
                     .fillMaxWidth()
                     .height(dimensionResource(id = R.dimen.plant_item_image_height)),
                 contentScale = ContentScale.Crop,
+
             )
 
             // Plant name
@@ -167,31 +172,6 @@ private fun GardenListItem(
                 Modifier.align(Alignment.CenterHorizontally),
                 style = MaterialTheme.typography.labelSmall
             )
-
-            // Last Watered
-            Text(
-                text = stringResource(id = R.string.watered_date_header),
-                Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = marginNormal),
-                style = MaterialTheme.typography.titleSmall
-            )
-            Text(
-                text = vm.waterDateString,
-                Modifier.align(Alignment.CenterHorizontally),
-                style = MaterialTheme.typography.labelSmall
-            )
-            Text(
-                text = pluralStringResource(
-                    id = R.plurals.watering_next,
-                    count = vm.wateringInterval,
-                    vm.wateringInterval
-                ),
-                Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(bottom = marginNormal),
-                style = MaterialTheme.typography.labelSmall
-            )
         }
     }
 }
@@ -211,7 +191,7 @@ private fun EmptyGarden(onAddPlantClick: () -> Unit, modifier: Modifier = Modifi
             style = MaterialTheme.typography.headlineSmall
         )
         Button(
-            shape = MaterialTheme.shapes.medium,
+            shape = MaterialTheme.shapes.small,
             onClick = onAddPlantClick
         ) {
             Text(
